@@ -4,6 +4,6 @@ export interface MealDetail extends MealSummary {
   [key: string]: string | null
 }
 export interface MealsResponse<T> { meals: T[] | null }
-export const CATEGORIES = ['Beef', 'Chicken', 'Dessert', 'Seafood', 'Pork'] as const
+export const CATEGORIES = ['Beef', 'Chicken', 'Pork', 'Seafood', 'Dessert'] as const
 export type Category = (typeof CATEGORIES)[number]
-export const CATEGORY_TH: Record<string, string> = { Beef: 'เนื้อวัว', Chicken: 'ไก่', Dessert: 'ของหวาน', Seafood: 'อาหารทะเล', Pork: 'หมู' }
+export const CATEGORY_TH: Record<string, string> = { Beef: 'เมนูเนื้อวัว', Chicken: 'เมนูไก่', Pork: 'เมนูหมู', Seafood: 'ซีฟู้ด', Dessert: 'ขนมหวาน' }

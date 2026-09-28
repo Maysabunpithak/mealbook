@@ -1,6 +1,8 @@
 import { Link } from 'react-router'
 import type { MealSummary } from './types'
 import { useAppStore } from './store'
+import { mealImage } from './mealImages'
+import { HeartIcon } from './icons'
 
 export function FavButton({ id, compact = false }: { id: string; compact?: boolean }) {
   const isFav = useAppStore((s) => s.favoriteIds.includes(id))
@@ -8,24 +10,25 @@ export function FavButton({ id, compact = false }: { id: string; compact?: boole
   if (compact)
     return (
       <button onClick={() => toggle(id)} aria-pressed={isFav} aria-label={isFav ? 'เอาออกจากคอลเลกชัน' : 'เก็บลงคอลเลกชัน'}
-        className={`flex size-9 items-center justify-center rounded-full text-lg backdrop-blur transition-colors ${isFav ? 'bg-error text-error-content' : 'bg-base-100/85 text-secondary hover:bg-base-100'}`}>
-        {isFav ? '♥' : '♡'}
+        className={`favorite-button ${isFav ? 'is-saved' : ''}`}>
+        <HeartIcon filled={isFav} />
       </button>
     )
   return (
-    <button className={`btn rounded-full ${isFav ? 'btn-error' : 'btn-outline btn-secondary'}`} onClick={() => toggle(id)} aria-pressed={isFav}>
-      {isFav ? '♥ เก็บแล้ว' : '♡ เก็บลงคอลเลกชัน'}
+    <button className={`favorite-button favorite-button-label ${isFav ? 'is-saved' : ''}`} onClick={() => toggle(id)} aria-pressed={isFav}>
+      <HeartIcon filled={isFav} />{isFav ? 'เก็บแล้ว' : 'เก็บลงคอลเลกชัน'}
     </button>
   )
 }
 export function MealCard({ meal }: { meal: MealSummary }) {
   return (
-    <div className="group">
+    <div className="group min-w-0">
       <div className="relative overflow-hidden rounded-2xl bg-base-300">
-        <Link to={`/recipe/${meal.idMeal}`}><img src={meal.strMealThumb} alt={meal.strMeal} loading="lazy" className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105" /></Link>
+        <Link to={`/recipe/${meal.idMeal}`}><img src={mealImage(meal)} alt={meal.strMeal} loading="lazy" className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105" /></Link>
         <div className="absolute right-2 top-2"><FavButton id={meal.idMeal} compact /></div>
       </div>
-      <Link to={`/recipe/${meal.idMeal}`} className="mt-3 block font-medium leading-snug hover:text-secondary">{meal.strMeal}</Link>
+      
+      <Link to={`/recipe/${meal.idMeal}`} className="mt-3 block break-words text-sm font-medium leading-snug hover:text-secondary sm:text-base">{meal.strMeal}</Link>
     </div>
   )
 }
@@ -47,3 +50,4 @@ export function ErrorBox({ message, onRetry }: { message?: string; onRetry: () =
 export function MealGrid({ meals }: { meals: MealSummary[] }) {
   return <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 lg:grid-cols-4">{meals.map((m) => <MealCard key={m.idMeal} meal={m} />)}</div>
 }
+

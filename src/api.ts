@@ -12,7 +12,15 @@ export async function fetchMeal(id: string): Promise<MealDetail> {
   if (!m) throw new Error('ไม่พบเมนูนี้')
   return m
 }
-export async function fetchRandom(): Promise<MealDetail> {
+export async function fetchRandom(category?: string | string[]): Promise<MealDetail> {
+  const categories = [...new Set((Array.isArray(category) ? category : category ? [category] : []).filter(Boolean))]
+  if (categories.length) {
+    const groups = await Promise.all(categories.map(fetchByCategory))
+    const meals = [...new Map(groups.flat().map((meal) => [meal.idMeal, meal])).values()]
+    if (!meals.length) throw new Error('ไม่พบเมนูในประเภทนี้ กรุณาเลือกประเภทอื่น')
+    const selected = meals[Math.floor(Math.random() * meals.length)]
+    return fetchMeal(selected.idMeal)
+  }
   const [m] = await get<MealDetail>('/random.php')
   if (!m) throw new Error('สุ่มเมนูไม่สำเร็จ')
   return m

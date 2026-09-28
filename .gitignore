@@ -1,2 +1,8 @@
 node_modules
 dist
+data/community/
+.hosting-inspect/
+openai-create-sites-0.3.0.tgz
+.env
+.env.*
+!.env.example
